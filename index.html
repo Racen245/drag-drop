@@ -25,13 +25,14 @@
             border-radius: 1.5rem;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             padding: 1rem;
-            overflow: hidden; /* Clips any content that tries to go outside this container */
+            overflow: hidden;
         }
         .draggable-image {
             position: absolute;
             cursor: grab;
-            width: 100px; /* Base width for desktop */
-            height: 100px; /* Base height for desktop */
+            /* UPDATED: Increased width and height by 20% for desktop */
+            width: 120px;
+            height: 120px;
             border-radius: 0.75rem;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: box-shadow 0.1s ease-in-out;
@@ -51,8 +52,9 @@
                 padding: 0.5rem;
             }
             .draggable-image {
-                width: 80px; /* Smaller width for mobile */
-                height: 80px; /* Smaller height for mobile */
+                /* UPDATED: Increased width and height by 20% for mobile */
+                width: 96px;
+                height: 96px;
             }
         }
     </style>
@@ -70,18 +72,12 @@
         let activeItem = null;
         let initialClientX, initialClientY;
 
-        // Define initial positions for the four corners
-        // We use small padding (e.g., 0.02) from the edges
-        // Note: For right/bottom positions, we'll calculate (1 - percentage) - image_width_in_percentage
-        // This ensures the *entire* image is visible, not just its top-left corner.
         const initialPositions = {
-            // Top-Left (Food - image1)
+            // These positions are percentages, so they will scale with the container.
+            // No changes needed here, as the image size adjustment is handled by CSS.
             image1: { desktop: { top: 0.02, left: 0.02 }, mobile: { top: 0.02, left: 0.02 } },
-            // Top-Right (Hands - image2)
             image2: { desktop: { top: 0.02, left: 0.98 }, mobile: { top: 0.02, left: 0.98 } },
-            // Bottom-Left (Teeth - image4 - placed bottom-left, assuming it was the last one)
             image4: { desktop: { top: 0.98, left: 0.02 }, mobile: { top: 0.98, left: 0.02 } },
-            // Bottom-Right (Shower - image3)
             image3: { desktop: { top: 0.98, left: 0.98 }, mobile: { top: 0.98, left: 0.98 } },
         };
 
@@ -104,15 +100,14 @@
                 let posY = containerHeight * posConfig.top;
 
                 // Adjust for image width/height if it's positioned from the right/bottom edge
-                // This ensures the *entire* image is within the container.
-                if (posConfig.left > 0.5) { // If it's intended for the right side
+                if (posConfig.left > 0.5) {
                     posX -= item.offsetWidth;
                 }
-                if (posConfig.top > 0.5) { // If it's intended for the bottom side
+                if (posConfig.top > 0.5) {
                     posY -= item.offsetHeight;
                 }
 
-                // Final clamp to ensure it's strictly within 0 and max bounds (redundant but safe)
+                // Final clamp to ensure it's strictly within 0 and max bounds
                 posX = Math.max(0, Math.min(posX, containerWidth - item.offsetWidth));
                 posY = Math.max(0, Math.min(posY, containerHeight - item.offsetHeight));
 
