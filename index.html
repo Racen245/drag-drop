@@ -30,9 +30,9 @@
         .draggable-image {
             position: absolute;
             cursor: grab;
-            /* UPDATED: Reduced width and height by 10% for desktop */
-            width: 124px; /* 138px * 0.90 = 124.2px, rounded to 124px */
-            height: 124px; /* 138px * 0.90 = 124.2px, rounded to 124px */
+            /* Desktop size remains at 124px */
+            width: 124px;
+            height: 124px;
             border-radius: 0.75rem;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: box-shadow 0.1s ease-in-out;
@@ -52,9 +52,9 @@
                 padding: 0.5rem;
             }
             .draggable-image {
-                /* UPDATED: Reduced width and height by 10% for mobile */
-                width: 99px; /* 110px * 0.90 = 99px */
-                height: 99px; /* 110px * 0.90 = 99px */
+                /* UPDATED: Increased width and height by 10% for mobile ONLY */
+                width: 109px; /* 99px * 1.10 = 108.9px, rounded to 109px */
+                height: 109px; /* 99px * 1.10 = 108.9px, rounded to 109px */
             }
         }
     </style>
