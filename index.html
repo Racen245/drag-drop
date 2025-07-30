@@ -30,9 +30,9 @@
         .draggable-image {
             position: absolute;
             cursor: grab;
-            /* UPDATED: Increased width and height by 20% for desktop */
-            width: 120px;
-            height: 120px;
+            /* UPDATED: Reduced width and height by 10% for desktop */
+            width: 124px; /* 138px * 0.90 = 124.2px, rounded to 124px */
+            height: 124px; /* 138px * 0.90 = 124.2px, rounded to 124px */
             border-radius: 0.75rem;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: box-shadow 0.1s ease-in-out;
@@ -52,9 +52,9 @@
                 padding: 0.5rem;
             }
             .draggable-image {
-                /* UPDATED: Increased width and height by 20% for mobile */
-                width: 96px;
-                height: 96px;
+                /* UPDATED: Reduced width and height by 10% for mobile */
+                width: 99px; /* 110px * 0.90 = 99px */
+                height: 99px; /* 110px * 0.90 = 99px */
             }
         }
     </style>
@@ -73,8 +73,6 @@
         let initialClientX, initialClientY;
 
         const initialPositions = {
-            // These positions are percentages, so they will scale with the container.
-            // No changes needed here, as the image size adjustment is handled by CSS.
             image1: { desktop: { top: 0.02, left: 0.02 }, mobile: { top: 0.02, left: 0.02 } },
             image2: { desktop: { top: 0.02, left: 0.98 }, mobile: { top: 0.02, left: 0.98 } },
             image4: { desktop: { top: 0.98, left: 0.02 }, mobile: { top: 0.98, left: 0.02 } },
@@ -99,7 +97,6 @@
                 let posX = containerWidth * posConfig.left;
                 let posY = containerHeight * posConfig.top;
 
-                // Adjust for image width/height if it's positioned from the right/bottom edge
                 if (posConfig.left > 0.5) {
                     posX -= item.offsetWidth;
                 }
@@ -107,7 +104,6 @@
                     posY -= item.offsetHeight;
                 }
 
-                // Final clamp to ensure it's strictly within 0 and max bounds
                 posX = Math.max(0, Math.min(posX, containerWidth - item.offsetWidth));
                 posY = Math.max(0, Math.min(posY, containerHeight - item.offsetHeight));
 
