@@ -1,197 +1,351 @@
 <!DOCTYPE html>
+
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Draggable Images</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
-        .draggable-container {
-            position: relative;
-            width: 95%;
-            max-width: 320px;
-            height: 90vh;
-            background-color: #ffffff;
-            border-radius: 1.5rem;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            padding: 1rem;
-            display: flex; /* Kept for initial centering, but not for image positioning */
-            flex-wrap: wrap; /* Kept for initial centering */
-            justify-content: center; /* Kept for initial centering */
-            align-items: center; /* Kept for initial centering */
-            gap: 1rem; /* Kept for initial centering */
-            overflow: hidden;
-        }
-        .draggable-image {
-            position: absolute; /* Essential for translate positioning */
-            cursor: grab;
-            width: 100px;
-            height: 100px;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: box-shadow 0.1s ease-in-out;
-            user-select: none;
-            -webkit-user-drag: none;
-            touch-action: none;
-            /* Removed top and left from here */
-        }
-        .draggable-image:active {
-            cursor: grabbing;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
 
-        @media (max-width: 640px) {
-            .draggable-container {
-                height: 85vh;
-                width: 98%;
-                padding: 0.5rem;
-            }
-            .draggable-image {
-                width: 80px;
-                height: 80px;
-            }
-        }
-    </style>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+
+        body {
+
+            font-family: 'Inter', sans-serif;
+
+            background-color: #f0f4f8;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            min-height: 100vh;
+
+            margin: 0;
+
+            overflow: hidden;
+
+        }
+
+        .draggable-container {
+
+            position: relative;
+
+            width: 95%;
+
+            max-width: 320px;
+
+            height: 90vh;
+
+            background-color: #ffffff;
+
+            border-radius: 1.5rem;
+
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+
+            padding: 1rem;
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 1rem;
+
+            overflow: hidden;
+
+        }
+
+        .draggable-image {
+
+            position: absolute;
+
+            cursor: grab;
+
+            width: 100px;
+
+            height: 100px;
+
+            border-radius: 0.75rem;
+
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+            transition: box-shadow 0.1s ease-in-out;
+
+            user-select: none;
+
+            -webkit-user-drag: none;
+
+            touch-action: none;
+
+        }
+
+        .draggable-image:active {
+
+            cursor: grabbing;
+
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+
+        }
+
+
+
+        /* Posiciones iniciales de las imágenes */
+
+        #image1 { top: 10%; left: 10%; }
+
+        #image2 { top: 20%; left: 40%; }
+
+        #image3 { top: 30%; left: 70%; }
+
+        #image4 { top: 50%; left: 20%; }
+
+
+
+        @media (max-width: 640px) {
+
+            .draggable-container {
+
+                height: 85vh;
+
+                width: 98%;
+
+                padding: 0.5rem;
+
+            }
+
+            .draggable-image {
+
+                width: 80px;
+
+                height: 80px;
+
+            }
+
+            #image1 { top: 5%; left: 5%; }
+
+            #image2 { top: 15%; left: 35%; }
+
+            #image3 { top: 25%; left: 65%; }
+
+            #image4 { top: 45%; left: 15%; }
+
+        }
+
+    </style>
+
 </head>
+
 <body>
-    <div class="draggable-container">
-        <img id="image1" class="draggable-image" src="food.png" alt="Foto 1">
-        <img id="image2" class="draggable-image" src="hands.png" alt="Foto 2">
-        <img id="image3" class="draggable-image" src="shower.png" alt="Foto 3">
-        <img id="image4" class="draggable-image" src="teeth.png" alt="Foto 4">
-    </div>
 
-    <script>
-        const container = document.querySelector('.draggable-container');
-        let activeItem = null;
-        let xOffset = 0, yOffset = 0; // These will store the current translated position
-        let initialClientX, initialClientY; // Stores the initial mouse/touch client coordinates
+    <div class="draggable-container">
 
-        // Define initial positions in percentages
-        const initialPositions = {
-            image1: { desktop: { top: 0.10, left: 0.10 }, mobile: { top: 0.05, left: 0.05 } },
-            image2: { desktop: { top: 0.20, left: 0.40 }, mobile: { top: 0.15, left: 0.35 } },
-            image3: { desktop: { top: 0.30, left: 0.70 }, mobile: { top: 0.25, left: 0.65 } },
-            image4: { desktop: { top: 0.50, left: 0.20 }, mobile: { top: 0.45, left: 0.15 } },
-        };
+        
 
-        // Function to set initial positions based on container size and media query
-        function setInitialImagePositions() {
-            const containerWidth = container.offsetWidth;
-            const containerHeight = container.offsetHeight;
-            const isMobile = window.matchMedia("(max-width: 640px)").matches;
+        <!-- Imágenes arrastrables: cambia los nombres de archivo a los de tus imágenes -->
 
-            document.querySelectorAll('.draggable-image').forEach(item => {
-                const itemId = item.id;
-                const posConfig = isMobile ? initialPositions[itemId].mobile : initialPositions[itemId].desktop;
+        <img id="image1" class="draggable-image" src="food.png" alt="Foto 1">
 
-                // Calculate pixel positions
-                let posX = containerWidth * posConfig.left;
-                let posY = containerHeight * posConfig.top;
+        <img id="image2" class="draggable-image" src="hands.png" alt="Foto 2">
 
-                // Adjust for image size to center the image based on its top-left corner
-                // By default, translate starts from the top-left, so if you want the image's
-                // center to be at the calculated percentage, you'd adjust by half its size.
-                // For now, we'll assume the percentage is for the top-left corner as per original CSS.
-                // If you want to center them, add:
-                // posX -= item.offsetWidth / 2;
-                // posY -= item.offsetHeight / 2;
+        <img id="image3" class="draggable-image" src="shower.png" alt="Foto 3">
 
-                item.style.transform = `translate3d(${posX}px, ${posY}px, 0)`;
-            });
-        }
+        <img id="image4" class="draggable-image" src="teeth.png" alt="Foto 4">
 
-        // Set initial positions when the page loads
-        window.addEventListener('load', setInitialImagePositions);
-        // Recalculate and set positions on resize
-        window.addEventListener('resize', setInitialImagePositions);
+    </div>
 
-        document.querySelectorAll('.draggable-image').forEach(item => {
-            item.addEventListener('touchstart', dragStart);
-            item.addEventListener('mousedown', dragStart);
-        });
 
-        document.addEventListener('touchmove', drag);
-        document.addEventListener('touchend', dragEnd);
-        document.addEventListener('mousemove', drag);
-        document.addEventListener('mouseup', dragEnd);
 
-        function getTranslateXY(element) {
-            const style = window.getComputedStyle(element);
-            const matrix = new DOMMatrixReadOnly(style.transform);
-            return { x: matrix.m41, y: matrix.m42 };
-        }
+    <script>
 
-        function dragStart(e) {
-            e.preventDefault();
-            activeItem = e.target;
-            activeItem.style.zIndex = 1000;
+        const container = document.querySelector('.draggable-container');
 
-            const currentTranslation = getTranslateXY(activeItem);
-            xOffset = currentTranslation.x;
-            yOffset = currentTranslation.y;
+        let activeItem = null;
 
-            if (e.type === "touchstart") {
-                initialClientX = e.touches[0].clientX;
-                initialClientY = e.touches[0].clientY;
-            } else {
-                initialClientX = e.clientX;
-                initialClientY = e.clientY;
-            }
-        }
+        let currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0;
 
-        function drag(e) {
-            if (activeItem) {
-                e.preventDefault();
-                let clientX, clientY;
 
-                if (e.type === "touchmove") {
-                    clientX = e.touches[0].clientX;
-                    clientY = e.touches[0].clientY;
-                } else {
-                    clientX = e.clientX;
-                    clientY = e.clientY;
-                }
 
-                const dx = clientX - initialClientX;
-                const dy = clientY - initialClientY;
+        document.querySelectorAll('.draggable-image').forEach(item => {
 
-                let newX = xOffset + dx;
-                let newY = yOffset + dy;
+            item.addEventListener('touchstart', dragStart);
 
-                const containerWidth = container.offsetWidth;
-                const containerHeight = container.offsetHeight;
-                const itemWidth = activeItem.offsetWidth;
-                const itemHeight = activeItem.offsetHeight;
+            item.addEventListener('mousedown', dragStart);
 
-                // Constrain within container boundaries
-                newX = Math.max(0, Math.min(newX, containerWidth - itemWidth));
-                newY = Math.max(0, Math.min(newY, containerHeight - itemHeight));
+        });
 
-                activeItem.style.transform = `translate3d(${newX}px, ${newY}px, 0)`;
-            }
-        }
 
-        function dragEnd(e) {
-            if (activeItem) {
-                activeItem.style.zIndex = '';
-                // Update xOffset and yOffset to the final position after drag
-                const finalTranslation = getTranslateXY(activeItem);
-                xOffset = finalTranslation.x;
-                yOffset = finalTranslation.y;
-                activeItem = null;
-            }
-        }
-    </script>
+
+        document.addEventListener('touchmove', drag);
+
+        document.addEventListener('touchend', dragEnd);
+
+        document.addEventListener('mousemove', drag);
+
+        document.addEventListener('mouseup', dragEnd);
+
+
+
+        function dragStart(e) {
+
+            e.preventDefault();
+
+            if (e.type === "touchstart") {
+
+                initialX = e.touches[0].clientX - xOffset;
+
+                initialY = e.touches[0].clientY - yOffset;
+
+            } else {
+
+                initialX = e.clientX - xOffset;
+
+                initialY = e.clientY - yOffset;
+
+            }
+
+            activeItem = e.target;
+
+            activeItem.style.zIndex = 1000;
+
+            const rect = activeItem.getBoundingClientRect();
+
+            const containerRect = container.getBoundingClientRect();
+
+            xOffset = e.clientX - rect.left;
+
+            yOffset = e.clientY - rect.top;
+
+            if (e.type === "touchstart") {
+
+                initialX = e.touches[0].clientX - containerRect.left - xOffset;
+
+                initialY = e.touches[0].clientY - containerRect.top - yOffset;
+
+            } else {
+
+                initialX = e.clientX - containerRect.left - xOffset;
+
+                initialY = e.clientY - containerRect.top - yOffset;
+
+            }
+
+        }
+
+
+
+        function drag(e) {
+
+            if (activeItem) {
+
+                e.preventDefault();
+
+                if (e.type === "touchmove") {
+
+                    currentX = e.touches[0].clientX - container.getBoundingClientRect().left;
+
+                    currentY = e.touches[0].clientY - container.getBoundingClientRect().top;
+
+                } else {
+
+                    currentX = e.clientX - container.getBoundingClientRect().left;
+
+                    currentY = e.clientY - container.getBoundingClientRect().top;
+
+                }
+
+                const newX = currentX - xOffset;
+
+                const newY = currentY - yOffset;
+
+                const containerWidth = container.offsetWidth;
+
+                const containerHeight = container.offsetHeight;
+
+                const itemWidth = activeItem.offsetWidth;
+
+                const itemHeight = activeItem.offsetHeight;
+
+                const maxX = containerWidth - itemWidth;
+
+                const maxY = containerHeight - itemHeight;
+
+                const constrainedX = Math.max(0, Math.min(newX, maxX));
+
+                const constrainedY = Math.max(0, Math.min(newY, maxY));
+
+                activeItem.style.transform = `translate3d(${constrainedX}px, ${constrainedY}px, 0)`;
+
+                activeItem.style.left = '0';
+
+                activeItem.style.top = '0';
+
+            }
+
+        }
+
+
+
+        function dragEnd(e) {
+
+            if (activeItem) {
+
+                activeItem.style.zIndex = '';
+
+                const transformMatrix = window.getComputedStyle(activeItem).transform;
+
+                const matrix = new DOMMatrixReadOnly(transformMatrix);
+
+                xOffset = matrix.m41;
+
+                yOffset = matrix.m42;
+
+                activeItem = null;
+
+            }
+
+        }
+
+
+
+        window.addEventListener('resize', () => {
+
+            document.querySelectorAll('.draggable-image').forEach(item => {
+
+                const transformMatrix = window.getComputedStyle(item).transform;
+
+                const matrix = new DOMMatrixReadOnly(transformMatrix);
+
+                const currentTranslateX = matrix.m41;
+
+                const currentTranslateY = matrix.m42;
+
+                if (transformMatrix === 'none' || (matrix.m41 === 0 && matrix.m42 === 0)) {
+
+                    // Mantener posiciones CSS
+
+                } else {
+
+                    xOffset = currentTranslateX;
+
+                    yOffset = currentTranslateY;
+
+                }
+
+            });
+
+        });
+
+    </script>
+
 </body>
+
 </html>
